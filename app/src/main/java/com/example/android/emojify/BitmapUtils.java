@@ -26,7 +26,6 @@ class BitmapUtils {
 
     static Bitmap resamplePic(Context context, String imagePath) {
 
-        // Get device screen size information
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         manager.getDefaultDisplay().getMetrics(metrics);
@@ -34,17 +33,14 @@ class BitmapUtils {
         int targetH = metrics.heightPixels;
         int targetW = metrics.widthPixels;
 
-        // Get the dimensions of the original bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(imagePath, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
-        // Determine how much to scale down the image
         int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
-        // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
 
@@ -59,20 +55,17 @@ class BitmapUtils {
         File storageDir = context.getExternalCacheDir();
 
         return File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,
+                ".jpg",
+                storageDir
         );
     }
 
     static boolean deleteImageFile(Context context, String imagePath) {
-        // Get the file
         File imageFile = new File(imagePath);
 
-        // Delete the image
         boolean deleted = imageFile.delete();
 
-        // If there is an error deleting the file, show a Toast
         if (!deleted) {
             String errorMessage = context.getString(R.string.error);
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
@@ -96,7 +89,6 @@ class BitmapUtils {
 
         String savedImagePath = null;
 
-        // Create the new file in the external storage
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
@@ -108,7 +100,6 @@ class BitmapUtils {
             success = storageDir.mkdirs();
         }
 
-        // Save the new Bitmap
         if (success) {
             File imageFile = new File(storageDir, imageFileName);
             savedImagePath = imageFile.getAbsolutePath();
@@ -120,10 +111,8 @@ class BitmapUtils {
                 e.printStackTrace();
             }
 
-            // Add the image to the system gallery
             galleryAddPic(context, savedImagePath);
 
-            // Show a Toast with the save location
             String savedMessage = context.getString(R.string.saved_message, savedImagePath);
             Toast.makeText(context, savedMessage, Toast.LENGTH_SHORT).show();
         }
@@ -133,7 +122,6 @@ class BitmapUtils {
 
 
     static void shareImage(Context context, String imagePath) {
-        // Create the share intent and start the share activity
         File imageFile = new File(imagePath);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");

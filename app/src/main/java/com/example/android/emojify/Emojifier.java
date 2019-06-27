@@ -77,7 +77,7 @@ public class Emojifier {
                         Toast.makeText(context, "No Face Detected", Toast.LENGTH_SHORT).show();
             }
 
-            resultBitmap = addBitmapToFace(bitmap, emojiBitmap, face);
+            resultBitmap = addBitmapToFace(resultBitmap, emojiBitmap, face);
 
 
         }
